@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel='stylesheet' type='text/css' href='request.css'>
         <script>
             window.onload=function(){
                 let searchbutton=document.createElement('BUTTON');
@@ -13,10 +14,11 @@
                 textfield.setAttribute('id','word');
                 textfield.classList.add('input');
                 
-                document.body.appendChild(textfield);
-                document.body.appendChild(searchbutton);
-                
-                
+                let main =document.getElementById('main');
+            
+                main.appendChild(textfield);
+                main.appendChild(searchbutton);
+
                 searchbutton.addEventListener('click',function(){
                     let word = document.getElementById('word').value;
                     if (word!==''){
@@ -24,8 +26,17 @@
                         
                         httpRequest.onreadystatechange = function (){
                             if((httpRequest.readyState===XMLHttpRequest.DONE && httpRequest.status === 200)){
+                                let div= document.createElement('div');
+                                div.setAttribute('id','result');
+                                let p = document.createElement('p');
+                                let ptext=document.createTextNode(div.id.toUpperCase());
+                                p.appendChild(ptext);
+                                p.classList.add('resultheading');
                                 let response=httpRequest.responseText;
-                                alert(response);
+                                div.innerHTML=(response);
+                                div.insertBefore(p,div.childNodes[0]);
+                                main.style.height='auto';
+                                main.appendChild(div);
                             }
                         }
                         httpRequest.open('GET', 'request.php?q='+word,true);
@@ -40,5 +51,12 @@
         </script>
     </head>
     <body>
+        <header>
+            <p class='heading'>Web Dictionary</p>
+        </header>
+        
+        <section id='main'>
+            <p>Lookup the definition of a word (e.g. ajax, html, bar, php, javascript or css)</p>
+        </section>
     </body>
 </html>
